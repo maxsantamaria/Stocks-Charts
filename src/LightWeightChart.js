@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { createChart } from 'lightweight-charts';
 
 
-const LightWeightChart = ({ data }) => {
+const LightWeightChart = ({ data, stock }) => {
   const [chart, setChart] = useState(null)
   const [series, setSeries] = useState(null)
   useEffect(() => {
     
-    const chart = createChart('chart', { 
+    const chart = createChart(`chart-${stock}`, { 
       width: 600, 
       height: 300,
       layout: {
@@ -49,9 +49,7 @@ const LightWeightChart = ({ data }) => {
     }
   }, [data])
   return (
-    <div id={'chart'}>
-      
-    </div>
+    <div id={`chart-${stock}`} />  
   )
 }
 

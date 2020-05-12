@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  width: inherit;
 }
 
 .App-logo {
@@ -35,4 +36,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.container {
+  margin: 20px;
+  display: flex;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.stats {
+  align-items: flex-start;
+  justify-content: flex-start;
 }
