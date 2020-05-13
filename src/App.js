@@ -18,6 +18,8 @@ function App() {
   const [maxValues, setMaxValues] = useState({})
   const [minValues, setMinValues] = useState({})
   const [initialTime, setInitialTime] = useState(Date.now())
+  const [exchanges, setExchanges] = useState({})
+  const [parser, setParser] = useState({})
 
   //const [data, setData] = useState([['x', 'dogs']])
   const [data, setData] = useState([])
@@ -29,7 +31,15 @@ function App() {
     setSocket(sock);
     sock.emit('EXCHANGES')
     sock.on('EXCHANGES', (data) => {
+      setExchanges(data)
+    })
+    sock.emit('STOCKS')
+    sock.on('STOCKS', data => {
       console.log(data)
+      for (var i = 0; i < data.length; i++) {
+        const name = data[i].company_name
+        setParser(crr => ({...crr, [name]: data[i].ticker}))
+      }
     })
 
     sock.on('UPDATE', res => {
@@ -51,6 +61,10 @@ function App() {
       })
       //setData(currentData => [...currentData, [res.time, res.value]])
       setData(currentData => [...currentData, {time: timeInSecs(res.time), value: res.value}])
+    })
+
+    sock.on('BUY', res => {
+      console.log(res)
     })
 
   }, [])
@@ -76,8 +90,8 @@ function App() {
   }
 
   const changeState = () => {
-    //setData([...data, [3, 100]])
-    
+    console.log(parser)
+
     if (socket.connected) {
       socket.close()
       setButtonText('Conectarse')
@@ -90,29 +104,41 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div className="container-button">
         {socket ? 
           <button onClick={changeState}>
               {buttonText}
           </button>
         : null}
       </div>
-      <div>
-        {Object.keys(stocksValues).map(stock => (
-          <div className="container" key={stock}>
-            <LightWeightChart stock={stock} data={stocksValues[stock]}/>
-            <div className="stats">
-              <div className="title">{stock}</div>
-              <div className="stat">Volumen Total Transado</div>
-              <div className="stat">Alto histórico: {maxValues[stock]}</div>
-              <div className="stat">Bajo histórico: {minValues[stock]}</div>
-              <div className="stat">Último precio: {getLastElem(stocksValues[stock]).value}</div>
-              <div className="stat">Variación porcentual: {variacionPorcentual(stocksValues[stock]).toFixed(2)}%</div>
-            </div>
-          </div>
-        ))
-        
-        }
+      <div className="row">
+        <div className="container-stocks">
+          {Object.keys(exchanges).map(exchange => (
+            exchanges[exchange].listed_companies.map(company => {
+              const stock = parser[company]
+              if (stock in stocksValues) {
+                return (
+                  <div className="container-stock border" key={stock}>
+                    <LightWeightChart stock={stock} data={stocksValues[stock]}/>
+                    <div className="stats">
+                      <div className="title">{stock}</div>
+                      <div className="stat">Volumen Total Transado</div>
+                      <div className="stat">Alto histórico: {maxValues[stock]}</div>
+                      <div className="stat">Bajo histórico: {minValues[stock]}</div>
+                      <div className="stat">Último precio: {getLastElem(stocksValues[stock]).value}</div>
+                      <div className="stat">Variación porcentual: {variacionPorcentual(stocksValues[stock]).toFixed(2)}%</div>
+                    </div>
+                  </div>
+                )
+              } else return null
+            })
+            
+          ))        
+          }
+        </div>
+        <div className="container-exchange">
+          hola
+        </div>
       </div>
       {/*Object.keys(stocksValues).map(stock => (
           

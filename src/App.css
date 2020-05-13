@@ -1,11 +1,17 @@
 .App {
-  text-align: center;
   width: inherit;
+  display: block;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+
+body {
+  background: black;
+  color: white;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -38,8 +44,23 @@
   }
 }
 
-.container {
+.row {
+  display: flex;
+}
+
+.container-button {
+  justify-content: center;
+  display: flex;
+  margin: 5px;
+}
+
+.container-stocks {
   margin: 20px;
+  flex: 70%;
+}
+
+.container-stock {
+  margin-bottom: 20px;
   display: flex;
 }
 
@@ -51,4 +72,18 @@
 .stats {
   align-items: flex-start;
   justify-content: flex-start;
+}
+
+.container-exchange {
+  flex: 30%;
+  margin: 20px;
+}
+
+.border {
+  border: solid 1px #979797;
+  margin-top: 1px;
+}
+
+.shadow {
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
 }
