@@ -3,6 +3,8 @@ import socketIOClient from "socket.io-client";
 import Chart from "react-google-charts";
 import './App.css';
 import LightWeightChart from './LightWeightChart';
+import Exchange from './Exchange'
+import Stock from './Stock'
 
 
 
@@ -21,6 +23,9 @@ function App() {
   const [exchanges, setExchanges] = useState({})
   const [parser, setParser] = useState({})
 
+  const [buyVolumes, setBuyVolumes] = useState({})
+  const [sellVolumes, setSellVolumes] = useState({})
+
   //const [data, setData] = useState([['x', 'dogs']])
   const [data, setData] = useState([])
 
@@ -31,6 +36,7 @@ function App() {
     setSocket(sock);
     sock.emit('EXCHANGES')
     sock.on('EXCHANGES', (data) => {
+      console.log(data)
       setExchanges(data)
     })
     sock.emit('STOCKS')
@@ -64,7 +70,35 @@ function App() {
     })
 
     sock.on('BUY', res => {
-      console.log(res)
+      setBuyVolumes(currentData => {
+        if (res.ticker in currentData) {
+          return {
+            ...currentData,
+            [res.ticker]: currentData[res.ticker] + res.volume
+          }
+        } else {
+          return {
+            ...currentData,
+            [res.ticker]: res.volume
+          }
+        }
+      })
+    })
+
+    sock.on('SELL', res => {
+      setSellVolumes(currentData => {
+        if (res.ticker in currentData) {
+          return {
+            ...currentData,
+            [res.ticker]: currentData[res.ticker] + res.volume
+          }
+        } else {
+          return {
+            ...currentData,
+            [res.ticker]: res.volume
+          }
+        }
+      })
     })
 
   }, [])
@@ -90,7 +124,8 @@ function App() {
   }
 
   const changeState = () => {
-    console.log(parser)
+    console.log(buyVolumes)
+    console.log(sellVolumes)
 
     if (socket.connected) {
       socket.close()
@@ -103,12 +138,13 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="wrapper">
       <div className="container-button">
         {socket ? 
-          <button onClick={changeState}>
+          <button className="button1" onClick={changeState}>
               {buttonText}
           </button>
+
         : null}
       </div>
       <div className="row">
@@ -120,14 +156,14 @@ function App() {
                 return (
                   <div className="container-stock border" key={stock}>
                     <LightWeightChart stock={stock} data={stocksValues[stock]}/>
-                    <div className="stats">
-                      <div className="title">{stock}</div>
-                      <div className="stat">Volumen Total Transado</div>
-                      <div className="stat">Alto histórico: {maxValues[stock]}</div>
-                      <div className="stat">Bajo histórico: {minValues[stock]}</div>
-                      <div className="stat">Último precio: {getLastElem(stocksValues[stock]).value}</div>
-                      <div className="stat">Variación porcentual: {variacionPorcentual(stocksValues[stock]).toFixed(2)}%</div>
-                    </div>
+                    <Stock
+                      stock={stock}
+                      maxValues={maxValues}
+                      minValues={minValues}
+                      stocksValues={stocksValues}
+                      buyVolumes={buyVolumes}
+                      sellVolumes={sellVolumes}
+                    />
                   </div>
                 )
               } else return null
@@ -136,31 +172,23 @@ function App() {
           ))        
           }
         </div>
-        <div className="container-exchange">
-          hola
+        <div className="container-exchanges">
+          {Object.keys(exchanges).map(exchange => (
+            <Exchange 
+              exchange={exchange}
+              infoExchange={exchanges[exchange]}
+              buyVolumes={buyVolumes}
+              parser={parser}
+              sellVolumes={sellVolumes}
+              key={exchange}
+            />
+          ))}
         </div>
       </div>
-      {/*Object.keys(stocksValues).map(stock => (
-          
-          <Chart
-            width={'600px'}
-            height={'400px'}
-            chartType="LineChart"
-            loader={<div>Loading Chart</div>}
-            data={stocksValues[stock]}
-            options={{
-              hAxis: {
-                title: 'Time',
-              },
-              vAxis: {
-                title: 'Popularity',
-              },
-            }}
-            rootProps={{ 'data-testid': '1' }}
-          />
-        ))*/}
-    
-      
+      <div className="container1">
+        <div className="div1">hola</div>
+        <div className="div1">chao</div>
+      </div>
 
     </div>
   );
@@ -170,23 +198,5 @@ const timeInSecs = (time) => {
   return Math.round(time / 1000) - 4 * 60 * 60
 }
 
-const getLastElem = (array) => {
-  return array[array.length - 1]
-}
-
-const getSecondToLastElem = (array) => {
-  return array[array.length - 2]
-}
-
-const variacionPorcentual = (array) => {
-  if (array.length > 1) {
-    const new_value = getLastElem(array).value
-    const old_value = getSecondToLastElem(array).value
-    return (new_value - old_value) / old_value * 100
-  }
-  else {
-    return 0
-  }
-}
 
 export default App;
