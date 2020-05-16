@@ -1,7 +1,4 @@
-.App {
-  width: inherit;
-  display: block;
-}
+
 /*CUSTOM WRAPPER*/
 .wrapper {
   margin-left: auto;
@@ -11,35 +8,10 @@
   padding-left: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-
 body {
   background: black;
   color: white;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-
 
 .row {
   display: flex;
@@ -53,7 +25,7 @@ body {
 
 .container-stocks {
   margin: 20px;
-  flex: 80%;
+  flex: 75%;
 }
 
 @media screen and (min-width: 1200px) {
@@ -72,7 +44,7 @@ body {
 }
 
 .container-exchanges {
-  flex: 20%;
+  flex: 25%;
   margin: 20px;
 }
 
@@ -92,6 +64,7 @@ body {
 
 .my-table {
   padding: 10px;
+  width: 100%;
 }
 
 tr.bottom-border td{
@@ -103,6 +76,11 @@ tr.bottom-border td{
   font-size: 24px;
 }
 
+.subtitle {
+  font-size: 18px;
+  font-style: italic;
+}
+
 .stats {
   flex: 100%;
   margin: 10px;
@@ -112,6 +90,7 @@ tr.bottom-border td{
   margin-top: 10px;
   width: 100%;
   max-width: 400px;
+  font-size: .78em;
 }
 
 
@@ -189,28 +168,4 @@ tr.bottom-border td{
 }
 
 
-.container1 {
-  display: block;
-  background-color: red;
-  padding: 2px;
-}
-
-.div1 {
-  display: inline-block;
-  background-color: green!important;
-}
-
-@media screen and (min-width: 1200px) {
-  .div1 {
-    display: inline-block;
-    background-color: green!important;
-  }
-}
-
-@media screen and (max-width: 1199px) {
-  .div1 {
-    display: block;
-    background-color: green!important;
-  }
-}
 

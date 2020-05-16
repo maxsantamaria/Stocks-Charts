@@ -41,11 +41,11 @@ const Exchange = ({ exchange, infoExchange, buyVolumes, parser, sellVolumes }) =
   }, [sellVolumes])
 
   return (
-    <div className="container-exchange border">
+    <div className="container-exchange border" key={exchange}>
       <div className="container-exchange-title border" >
         Mercado {exchange}
-        <span class="tooltiptext">
-          {infoExchange.listed_companies.map(company => <div>- {company}</div>)}
+        <span className="tooltiptext">
+          {infoExchange.listed_companies.map(company => <div key={company}>- {company}</div>)}
         </span>
       </div>
       <table className="my-table">

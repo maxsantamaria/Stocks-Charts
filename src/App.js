@@ -22,6 +22,7 @@ function App() {
   const [initialTime, setInitialTime] = useState(Date.now())
   const [exchanges, setExchanges] = useState({})
   const [parser, setParser] = useState({})
+  const [stocks, setStocks] = useState({})
 
   const [buyVolumes, setBuyVolumes] = useState({})
   const [sellVolumes, setSellVolumes] = useState({})
@@ -42,9 +43,10 @@ function App() {
     sock.emit('STOCKS')
     sock.on('STOCKS', data => {
       console.log(data)
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         const name = data[i].company_name
         setParser(crr => ({...crr, [name]: data[i].ticker}))
+        setStocks(crr => ({ ...crr, [name]: data[i] }))
       }
     })
 
@@ -163,6 +165,7 @@ function App() {
                       stocksValues={stocksValues}
                       buyVolumes={buyVolumes}
                       sellVolumes={sellVolumes}
+                      stockInfo={stocks[company]}
                     />
                   </div>
                 )
@@ -184,10 +187,6 @@ function App() {
             />
           ))}
         </div>
-      </div>
-      <div className="container1">
-        <div className="div1">hola</div>
-        <div className="div1">chao</div>
       </div>
 
     </div>

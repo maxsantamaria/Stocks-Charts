@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const Stock = ({ stock, maxValues, minValues, stocksValues, buyVolumes, sellVolumes }) => {
+const Stock = ({ stock, maxValues, minValues, stocksValues, buyVolumes, sellVolumes, stockInfo }) => {
   const [totalVolume, setTotalVolume] = useState(0)
   useEffect(() => {
     let volume = 0
@@ -15,6 +15,7 @@ const Stock = ({ stock, maxValues, minValues, stocksValues, buyVolumes, sellVolu
   return (
     <div className="stats">
       <div className="title">{stock}</div>
+      {stockInfo && <div className="subtitle">{stockInfo.company_name}, {stockInfo.country}</div>}
       <table className="table-stats">
         <tbody>
           <tr className="bottom-border">
